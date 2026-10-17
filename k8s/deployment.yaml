@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-log-engine-deployment
+  labels:
+    app: microservice-log-engine
+    tier: analytics
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: microservice-log-engine
+  template:
+    metadata:
+      labels:
+        app: microservice-log-engine
+        tier: analytics
+    spec:
+      # Enforce pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+
+      containers:
+        - name: log-engine-container
+          image: microservice-log-engine:v1.0.0
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+
+          # Inject environment variables from ConfigMap
+          envFrom:
+            - configMapRef:
+                name: log-engine-config
+
+          # Resource quotas for cluster stability
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # ----------------------------------------------------------------------
+          # Liveness Probe: Restarts the container if it deadlocks or hangs
+          # ----------------------------------------------------------------------
+          livenessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          # ----------------------------------------------------------------------
+          # Readiness Probe: Ensures traffic is only routed once the app is ready
+          # ----------------------------------------------------------------------
+          readinessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 2

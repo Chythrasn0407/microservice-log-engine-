@@ -1,0 +1,40 @@
+2026-10-17 08:30:01.120 [api-gateway] [INFO] [trace_id=tr-1001, span_id=sp-001] Received incoming POST /api/v1/auth/login from client IP 192.168.1.45
+2026-10-17 08:30:01.145 [auth-service] [INFO] [trace_id=tr-1001, span_id=sp-002] Authenticating user credentials for user_id=usr_9120
+2026-10-17 08:30:01.210 [auth-service] [INFO] [trace_id=tr-1001, span_id=sp-003] JWT issued successfully for user_id=usr_9120, expiry=3600s
+2026-10-17 08:30:02.005 [api-gateway] [INFO] [trace_id=tr-1002, span_id=sp-004] Route matched: GET /api/v1/inventory/items?category=electronics
+2026-10-17 08:30:02.040 [inventory-service] [INFO] [trace_id=tr-1002, span_id=sp-005] Cache hit in Redis for key cache:inventory:electronics
+2026-10-17 08:30:03.112 [api-gateway] [WARN] [trace_id=tr-1003, span_id=sp-006] Upstream latency degraded: inventory-service response time 840ms exceeds threshold (500ms)
+2026-10-17 08:30:04.500 [auth-service] [ERROR] [trace_id=tr-1004, span_id=sp-007] JWTValidationFailed: Token signature expired for subject usr_8829 on route /api/v1/profile
+2026-10-17 08:30:05.110 [api-gateway] [INFO] [trace_id=tr-1005, span_id=sp-008] Processing checkout request for cart_id=cart_5512
+2026-10-17 08:30:05.150 [order-service] [INFO] [trace_id=tr-1005, span_id=sp-009] Validating cart items for cart_id=cart_5512 with inventory-service
+2026-10-17 08:30:05.210 [order-service] [INFO] [trace_id=tr-1005, span_id=sp-010] Creating reservation in inventory-service for order_id=ORD-9901
+2026-10-17 08:30:05.512 [payment-service] [INFO] [trace_id=tr-1005, span_id=sp-011] Initiating payment intent with Stripe for amount=129.99 USD
+2026-10-17 08:30:10.515 [payment-service] [ERROR] [trace_id=tr-1005, span_id=sp-012] PaymentGatewayTimeoutException: Stripe upstream gateway timed out after 5000ms for order_id=ORD-9901
+2026-10-17 08:30:10.520 [order-service] [WARN] [trace_id=tr-1005, span_id=sp-013] Retrying payment processing for order_id=ORD-9901 (attempt 1/3)
+2026-10-17 08:30:15.525 [payment-service] [ERROR] [trace_id=tr-1005, span_id=sp-014] PaymentGatewayTimeoutException: Stripe upstream gateway timed out after 5000ms for order_id=ORD-9901
+2026-10-17 08:30:15.530 [order-service] [ERROR] [trace_id=tr-1005, span_id=sp-015] CircuitBreakerOpenException: Circuit breaker [payment-service] is OPEN. Fast-failing request for order_id=ORD-9901
+2026-10-17 08:30:16.100 [order-service] [INFO] [trace_id=tr-1006, span_id=sp-016] Compensating transaction triggered: releasing inventory lock for cart_id=cart_5512
+2026-10-17 08:30:17.300 [order-service] [ERROR] [trace_id=tr-1007, span_id=sp-017] ConnectionRefusedError: Unable to connect to postgres-cluster:5432 at order-db.internal
+2026-10-17 08:30:17.310 [order-service] [ERROR] [trace_id=tr-1007, span_id=sp-018] DatabaseConnectionTimeout: Pool exhausted waiting for database connection after 3000ms
+2026-10-17 08:30:18.050 [api-gateway] [WARN] [trace_id=tr-1008, span_id=sp-019] RateLimitExceeded: IP 203.0.113.195 exceeded threshold of 100 req/min on /api/v1/auth/login
+2026-10-17 08:30:18.420 [auth-service] [ERROR] [trace_id=tr-1009, span_id=sp-020] NullPointerException: userContext is null in auth filter chain for header Authorization
+2026-10-17 08:30:19.000 [inventory-service] [WARN] [trace_id=tr-1010, span_id=sp-021] High memory watermark reached: 86% JVM heap utilized
+2026-10-17 08:30:20.150 [inventory-service] [ERROR] [trace_id=tr-1011, span_id=sp-022] OutOfMemoryError: Java heap space during batch inventory payload deserialization (3500 items)
+2026-10-17 08:30:21.010 [notification-service] [INFO] [trace_id=tr-1012, span_id=sp-023] Consuming message from queue topic=notifications.email
+2026-10-17 08:30:21.250 [notification-service] [ERROR] [trace_id=tr-1012, span_id=sp-024] KafkaBrokerUnavailable: Failed to deliver message to topic [notifications.email], broker leader unavailable
+2026-10-17 08:30:22.400 [api-gateway] [INFO] [trace_id=tr-1013, span_id=sp-025] GET /healthz 200 OK from Kubernetes liveness probe
+2026-10-17 08:30:23.010 [shipping-service] [INFO] [trace_id=tr-1014, span_id=sp-026] Processing dispatch label for tracking_id=TRK-882190
+2026-10-17 08:30:23.500 [shipping-service] [WARN] [trace_id=tr-1014, span_id=sp-027] FedEx partner API returned HTTP 429 Too Many Requests, backing off for 2000ms
+2026-10-17 08:30:24.110 [api-gateway] [ERROR] [trace_id=tr-1015, span_id=sp-028] 502 Bad Gateway: Upstream pod order-service-68c99bf7c-xz2k unreachable
+2026-10-17 08:30:25.040 [order-service] [INFO] [trace_id=tr-1016, span_id=sp-029] Reconnected to postgres-cluster:5432 after replica failover
+2026-10-17 08:30:26.115 [payment-service] [INFO] [trace_id=tr-1017, span_id=sp-030] Payment intent succeeded for order_id=ORD-9902 amount=45.00 USD
+2026-10-17 08:30:26.220 [order-service] [INFO] [trace_id=tr-1017, span_id=sp-031] Order ORD-9902 state transitioned to CONFIRMED
+2026-10-17 08:30:27.000 [notification-service] [INFO] [trace_id=tr-1017, span_id=sp-032] Reconnected to Kafka broker kafka-cluster:9092
+2026-10-17 08:30:27.150 [notification-service] [INFO] [trace_id=tr-1017, span_id=sp-033] Order confirmation email dispatched to user_id=usr_4412
+2026-10-17 08:30:28.010 [api-gateway] [WARN] [trace_id=tr-1018, span_id=sp-034] Deprecated API endpoint called: /api/v1/users/legacy-login by user-agent Android-App/2.1
+2026-10-17 08:30:29.310 [inventory-service] [INFO] [trace_id=tr-1019, span_id=sp-035] Garbage collector reclaimed 410MB heap, memory watermark dropped to 48%
+2026-10-17 08:30:30.500 [auth-service] [ERROR] [trace_id=tr-1020, span_id=sp-036] NullPointerException: null object reference during OAuth callback state verification
+2026-10-17 08:30:31.100 [shipping-service] [INFO] [trace_id=tr-1021, span_id=sp-037] Shipping manifest generated for batch=BATCH-4029
+2026-10-17 08:30:32.400 [payment-service] [ERROR] [trace_id=tr-1022, span_id=sp-038] PaymentGatewayTimeoutException: Stripe upstream gateway timed out after 5000ms for order_id=ORD-9905
+2026-10-17 08:30:33.200 [order-service] [ERROR] [trace_id=tr-1023, span_id=sp-039] ConnectionRefusedError: Unable to connect to postgres-cluster:5432 at order-db.internal
+2026-10-17 08:30:34.000 [api-gateway] [INFO] [trace_id=tr-1024, span_id=sp-040] GET /healthz 200 OK from Kubernetes readiness probe
