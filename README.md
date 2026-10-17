@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛡️ Microservice Distributed Log Anomaly & Error Triage Engine
 
 > **DevOps Capstone Project • Use Case 9**  
@@ -227,3 +228,6 @@ kubectl delete -k k8s/
 The GitHub Actions pipeline defined in [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml) triggers on every `push` and `pull_request` to `main`:
 1. **Pytest Job**: Sets up Python 3.11, installs dependencies, and runs all unit tests.
 2. **Docker Build Job**: Sets up Docker Buildx and validates that the container image builds without syntax or dependency errors.
+=======
+# microservice-log-engine-
+>>>>>>> f8d80e0c1aa21849db9642e6069b0250f81ccaf9
